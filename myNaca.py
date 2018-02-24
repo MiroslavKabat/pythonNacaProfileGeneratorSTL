@@ -263,6 +263,6 @@ def PrintToFile(triangles, naca):
 # length of foil; 0.2 [m]
 # chord length; 1 [m]
 # angle; 6 [°]
-NACA = CNACA("0012", 50, 0.1, 1, 20)
+NACA = CNACA("2412", 100, 0.2, 1, 0)
 # triangles = triangleGenerator(NACA.vertices[0], NACA.vertices[1])
 PrintToFile(triangleGenerator(NACA.vertices[0], NACA.vertices[1]), NACA)
