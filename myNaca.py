@@ -1,12 +1,13 @@
 #!/usr/bin/python
 #---------------------------
-# Kabát Engineering s.r.o. 
 # Miroslav Kabát
-# 
+# http://www.miroslavkabat.cz
+# kabat@keng.cz
+#
+# Kabát Engineering s.r.o. 
 # tel: +420 607 624 470
 # http://www.keng.cz
 # info@keng.cz
-# kabat@keng.cz
 # 
 # 2018 Czech Republic
 #----------------------------
@@ -52,21 +53,25 @@ class CTriangle(object):
             pass
 
 class CNACA(object):
-    def __init__(self, foil, nPts, length):
+    def __init__(self, foil, nPts, length, chordLength, angle):
         self.foil = foil
         self.nPts = nPts
         self.length = length
+        self.angle = (-1) * angle
+        self.chordLength = chordLength
+        self.vertices = []
         
         self.m = float(int(str(foil)[0]))/100  # max camber
         self.p = float(int(str(foil)[1]))/10   # chordwise position of max camber
         self.t = float(int(str(foil)[2:]))/100 # thickness
 
-        self.vertices = self.Vertices()
+        self.updateVertices()
         
-    def Vertices(self):
+    def updateVertices(self):
         foil = self.foil
         nPts = self.nPts
         length = self.length
+        angle = self.angle
         m = self.m
         p = self.p
         t = self.t
@@ -114,13 +119,33 @@ class CNACA(object):
         verticesBack.extend(verticesBackTop[1:])
         
         listVertices = [ verticesFront, verticesBack ]
-        return listVertices
+
+        self.vertices = listVertices
+        
+        self.transSize()
+        self.transRot()
+        
+
+    def transSize(self):
+        for lsVer in self.vertices:
+            for ver in lsVer:
+                ver.x = ver.x * self.chordLength
+                ver.y = ver.y * self.chordLength
+
+    def transRot(self):
+        angleRad = self.angle / 180.0 * math.pi
+        for lsVer in self.vertices:
+            for ver in lsVer:
+                newX = ver.x * math.cos(angleRad) - ver.y * math.sin(angleRad)
+                newY = ver.x * math.sin(angleRad) + ver.y * math.cos(angleRad)
+                ver.x = newX
+                ver.y = newY
 
 def triangleGenerator(VerFs, VerBs):
     triangles = []
     i = 0
     for verF in VerFs:
-        # 1.
+        # 1. foil
         vertices = []
         vertices.append( verF )
         vertices.append( VerBs[i] )
@@ -131,10 +156,9 @@ def triangleGenerator(VerFs, VerBs):
             idx = i + 1 
             vertices.append(VerBs[idx])
             pass
-
         triangles.append(CTriangle(vertices))
 
-        # 2.
+        # 2. foil
         vertices = []
         vertices.append( verF )
         if i + 1 == len(VerFs):
@@ -146,18 +170,74 @@ def triangleGenerator(VerFs, VerBs):
             vertices.append(VerBs[idx])
             vertices.append(VerFs[idx])
             pass
+        triangles.append(CTriangle(vertices))
 
+        # 3. sides front
+        if i >= len(VerFs) / 2.0:
+            pass
+        else:
+            vertices = []
+            vertices.append( verF )
+        
+            idxO = len(VerFs)-1-i
+            idx1 = len(VerFs)-2-i
+            
+            vertices.append(VerFs[idxO])
+            vertices.append(VerFs[idx1])
+            pass
+        triangles.append(CTriangle(vertices))
+        # 4. sides front
+        if i + 2 >= len(VerFs) / 2.0:
+            pass
+        else:
+            vertices = []
+            vertices.append( verF )
+        
+            idxO = i + 1
+            idx1 = len(VerFs)-2-i
+            
+            vertices.append(VerFs[idxO])
+            vertices.append(VerFs[idx1])
+            pass
+        triangles.append(CTriangle(vertices))
+
+        # 5. sides back
+        if i >= len(VerBs) / 2.0:
+            pass
+        else:
+            vertices = []
+            vertices.append( VerBs[i] )
+        
+            idxO = len(VerBs)-1-i
+            idx1 = len(VerBs)-2-i
+            
+            vertices.append(VerBs[idxO])
+            vertices.append(VerBs[idx1])
+            pass
+        triangles.append(CTriangle(vertices))
+        # 6. sides back
+        if i + 2 >= len(VerBs) / 2.0:
+            pass
+        else:
+            vertices = []
+            vertices.append( VerBs[i] )
+        
+            idxO = i + 1
+            idx1 = len(VerBs)-2-i
+            
+            vertices.append(VerBs[idxO])
+            vertices.append(VerBs[idx1])
+            pass
         triangles.append(CTriangle(vertices))
 
         i = i + 1 
     return triangles
 
-def PrintToFile(triangles):
-    nacaNumber='0012'
+def PrintToFile(triangles, naca):
     pointCount='10'
     nacaModelName='naca'
 
-    stlFile = open('naca' + nacaNumber + '.stl','w')
+    stlFile = open('naca' + str(naca.foil) + '.stl','w')
     stlFile.truncate()
 
     stlFile.write('solid {0}\n'.format(nacaModelName))
@@ -175,9 +255,11 @@ def PrintToFile(triangles):
     stlFile.close()
     pass
 
-NACA = CNACA(8416, 300, 0.1)
-triangles = triangleGenerator(NACA.vertices[0], NACA.vertices[1])
-PrintToFile(triangles)
-
-# nacaNumber = sys.argv[1]
-# pointCount = sys.argv[2]
+# foil number; 8416 [-]
+# count of points (fine or coarse mesh); 100 [cnt]
+# length of foil; 0.2 [m]
+# chord length; 1 [m]
+# angle; 6 [°]
+NACA = CNACA(8416, 100, 0.2, 1, 6)
+# triangles = triangleGenerator(NACA.vertices[0], NACA.vertices[1])
+PrintToFile(triangleGenerator(NACA.vertices[0], NACA.vertices[1]), NACA)
