@@ -68,7 +68,6 @@ class CNACA(object):
         self.updateVertices()
         
     def updateVertices(self):
-        foil = self.foil
         nPts = self.nPts
         length = self.length
         angle = self.angle
@@ -91,13 +90,17 @@ class CNACA(object):
             xc = xpos
             yt = 5 * t * (0.2969*(x**0.5)-0.126*(x**1)-0.3516*(x**2.0)+0.2843*(x**3.0)-0.1015*(x**4.0))
 
-            if xc <= p:
-                yc = m/(0+p)**2 * (2*p*x-x**2)
-                dycdx = 2*m/((0+p)**2)*(p-xpos)
+            if p != 0 and m != 0:
+                if xc <= p:
+                    yc = m/(0+p)**2 * (2*p*x-x**2)
+                    dycdx = 2*m/((0+p)**2)*(p-xpos)
+                else:
+                    yc = m/(1-p)**2 * ((1-2*p)+2*p*x-x**2)
+                    dycdx = 2*m/((1-p)**2)*(p-xpos)
             else:
-                yc = m/(1-p)**2 * ((1-2*p)+2*p*x-x**2)
-                dycdx = 2*m/((1-p)**2)*(p-xpos)
-            
+                yc = 0
+                dycdx = 0
+
             atandydx = math.atan(dycdx)
             
             xd = xc + yt * math.sin(atandydx)
@@ -148,7 +151,6 @@ def triangleGenerator(VerFs, VerBs):
         # 1. foil
         vertices = []
         vertices.append( verF )
-        vertices.append( VerBs[i] )
         if i + 1 == len(VerFs):
             vertices.append(VerBs[0])
             pass
@@ -156,19 +158,20 @@ def triangleGenerator(VerFs, VerBs):
             idx = i + 1 
             vertices.append(VerBs[idx])
             pass
+        vertices.append( VerBs[i] )
         triangles.append(CTriangle(vertices))
 
         # 2. foil
         vertices = []
         vertices.append( verF )
         if i + 1 == len(VerFs):
-            vertices.append(VerBs[0])
             vertices.append(VerFs[0])
+            vertices.append(VerBs[0])
             pass
         else:
             idx = i + 1 
-            vertices.append(VerBs[idx])
             vertices.append(VerFs[idx])
+            vertices.append(VerBs[idx])
             pass
         triangles.append(CTriangle(vertices))
 
@@ -196,8 +199,8 @@ def triangleGenerator(VerFs, VerBs):
             idxO = i + 1
             idx1 = len(VerFs)-2-i
             
-            vertices.append(VerFs[idxO])
             vertices.append(VerFs[idx1])
+            vertices.append(VerFs[idxO])
             pass
         triangles.append(CTriangle(vertices))
 
@@ -211,8 +214,8 @@ def triangleGenerator(VerFs, VerBs):
             idxO = len(VerBs)-1-i
             idx1 = len(VerBs)-2-i
             
-            vertices.append(VerBs[idxO])
             vertices.append(VerBs[idx1])
+            vertices.append(VerBs[idxO])
             pass
         triangles.append(CTriangle(vertices))
         # 6. sides back
@@ -225,7 +228,7 @@ def triangleGenerator(VerFs, VerBs):
             idxO = i + 1
             idx1 = len(VerBs)-2-i
             
-            vertices.append(VerBs[idxO])
+            vertices.append(VerBs[idxO])           
             vertices.append(VerBs[idx1])
             pass
         triangles.append(CTriangle(vertices))
@@ -260,6 +263,6 @@ def PrintToFile(triangles, naca):
 # length of foil; 0.2 [m]
 # chord length; 1 [m]
 # angle; 6 [°]
-NACA = CNACA(8416, 100, 0.2, 1, 6)
+NACA = CNACA("0012", 50, 0.1, 1, 20)
 # triangles = triangleGenerator(NACA.vertices[0], NACA.vertices[1])
 PrintToFile(triangleGenerator(NACA.vertices[0], NACA.vertices[1]), NACA)
