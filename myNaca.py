@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*- 
 #---------------------------
 # Miroslav Kabát
 # http://www.miroslavkabat.cz
@@ -263,6 +264,17 @@ def PrintToFile(triangles, naca):
 # length of foil; 0.2 [m]
 # chord length; 1 [m]
 # angle; 6 [°]
-NACA = CNACA("2412", 100, 0.2, 1, 0)
+
+argCount = len(sys.argv)
+if argCount == 6:
+    foil = str(sys.argv[1])
+    nPts = int(sys.argv[2])
+    length = float(sys.argv[3])
+    chordLength = float(sys.argv[4])
+    angle = float(sys.argv[5])
+    NACA = CNACA(foil, nPts, length, chordLength, angle)
+else:
+    NACA = CNACA("2412", 100, 0.2, 1, 0)
+
 # triangles = triangleGenerator(NACA.vertices[0], NACA.vertices[1])
 PrintToFile(triangleGenerator(NACA.vertices[0], NACA.vertices[1]), NACA)
