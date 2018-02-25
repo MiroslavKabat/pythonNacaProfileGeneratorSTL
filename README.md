@@ -1,4 +1,4 @@
-# pythonNacaProfileGeneratorSTL
+# NACA airfoil generator - directly to .stl - python
 
 Script which directly generate 4-digit NACA profile to .STL file in ASCII code. 
 Variables: 
