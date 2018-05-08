@@ -8,7 +8,9 @@ Script which directly generate 4-digit NACA profile to .STL file in ASCII code.
 
 ## Preview
 
-[![NacaPreview](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/naca8408_long.stl)](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/naca8408_long.stl)
+* [NACA 8408 - long wing](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/naca8408_long.stl)
+* [NACA 0012 - angle of attack 20°](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/naca0012_angleOfAttack20.stl)
+* [NACA 2412 - fine mesh](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/naca2412_fineMesh.stl)
 
 ## Getting Started
 
