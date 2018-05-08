@@ -42,7 +42,17 @@ Tested in Windows 10 Pro and Ubuntu 16.04 with Python 3.6.5
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+Permissions
+* Commercial use 
+* Modification 
+* Distribution 
+* Private use 
+
+Limitations
+* Liability 
+* Warranty 
 
 ## Next steps?
 
