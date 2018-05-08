@@ -39,6 +39,9 @@ Tested in Windows 10 Pro and Ubuntu 16.04 with Python 3.6.5
 ## Authors
 
 * **Miroslav Kabát**
+* [www.miroslavkabat.cz](http://www.miroslavkabat.cz)
+* +420 607 624 470
+* kabat@keng.cz
 
 ## License
 
