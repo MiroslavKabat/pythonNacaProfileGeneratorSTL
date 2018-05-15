@@ -2,6 +2,8 @@
 
 Script which directly generate 4-digit NACA profile to .STL file in ASCII code. 
 
+![Preview](https://github.com/MiroslavKabat/pythonNacaProfileGeneratorSTL/blob/master/samples/Preview.png)
+
 ## Fast start - How to use this project:
 
 * [Youtube](https://youtu.be/6W2zwtiZeJc) - How to simply run this script
